@@ -1,0 +1,304 @@
+﻿<!DOCTYPE html>
+<html lang="hi-IN" data-mode="sarak">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#140801" />
+  <meta name="color-scheme" content="dark" />
+  <title>रास्ते कटे — सफ़र का संगीत</title>
+  <meta name="description" content="सफ़र पर हो? रास्ते कटे पर Hindi, Punjabi, Bhojpuri, 90s Romantic aur Item Songs suno — car, bus, train ya flight — bina signup ke." />
+
+  <!-- Favicon -->
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-mode="sarak">
+
+  <!-- Hidden YouTube player -->
+  <div id="yt-host" aria-hidden="true"></div>
+
+  <!-- Background layers -->
+  <div class="bg" aria-hidden="true">
+    <div class="bg__img"></div>
+    <canvas id="ambient-canvas" class="bg__canvas"></canvas>
+    <div class="bg__overlay"></div>
+    <div class="bg__pulse" id="bg-pulse"></div>
+    <div class="bg__grain"></div>
+    <div class="bg__vignette-top"></div>
+    <div class="bg__vignette-bot"></div>
+  </div>
+
+  <!-- START OVERLAY — user click unlocks audio playback -->
+  <div class="start-overlay" id="start-overlay">
+    <div class="start-card">
+      <div class="start-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="36" height="36"><polygon points="8 5 19 12 8 19 8 5"></polygon></svg>
+      </div>
+      <h2 class="start-title">रास्ते कटे</h2>
+      <p class="start-sub">सफ़र का संगीत</p>
+      <button class="start-btn" id="start-btn" onclick="startApp()">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><polygon points="8 5 19 12 8 19 8 5"></polygon></svg>
+        <span>सफ़र शुरू करें</span>
+      </button>
+      <p class="start-hint">Internet connection ज़रूरी है</p>
+    </div>
+  </div>
+
+  <!-- Main App Shell -->
+  <main class="shell" id="main-shell" style="opacity:0;pointer-events:none;">
+
+    <!-- Top Navigation Bar -->
+    <header class="topbar">
+      <div class="topbar__left">
+        <span class="live-dot" aria-hidden="true"></span>
+        <time class="clock" id="clock">--:--</time>
+        <span class="sep" aria-hidden="true">·</span>
+        <span class="listeners" id="listeners" aria-live="polite">— सुन रहे हैं</span>
+      </div>
+      <nav class="topbar__right">
+        <button class="top-settings-btn" onclick="openSettingsModal()" title="पसंद और मूड बदलें">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+          <span>पसंद · Vibe</span>
+        </button>
+        <a class="support-btn" href="https://buymeacoffee.com" target="_blank" rel="noopener">Support</a>
+      </nav>
+    </header>
+
+    <!-- Center Hero Section -->
+    <section class="hero">
+
+      <div class="brand">
+        <div class="brand__icon-wrap">
+          <div class="brand__pulse-ring"></div>
+          <svg class="brand__icon" viewBox="0 0 48 48" width="40" height="40" fill="none">
+            <circle cx="24" cy="24" r="21" stroke="var(--accent)" stroke-width="1.5" fill="rgba(0,0,0,0.3)"/>
+            <path d="M17 32V16l18 8-18 8Z" fill="var(--accent)"/>
+          </svg>
+        </div>
+        <h1 class="brand__title">रास्ते कटे</h1>
+        <p class="brand__latin">RASTE KATE</p>
+        <p class="brand__tagline" id="safar-tagline">सफ़र पर हो तो गाना साथ हो</p>
+
+        <!-- Active Filter Badge Pill -->
+        <button class="active-filter-badge" id="active-filter-badge" onclick="openSettingsModal()" title="क्लिक करके पसंद बदलें">
+          <span class="badge-dot"></span>
+          <span id="active-filter-text">हाईवे मिक्स · ऑल मूड</span>
+          <span class="badge-edit">बदलें</span>
+        </button>
+      </div>
+
+      <!-- Safar Mode Switcher -->
+      <div class="safar-wrap">
+        <p class="safar-label">अपना सफ़र चुनो</p>
+        <div class="safar-selector" role="group" aria-label="सफ़र का तरीका">
+          <button class="safar-btn safar-btn--active" data-mode="sarak" onclick="setSafar('sarak')" aria-pressed="true">
+            <span class="safar-btn__label">सड़क</span>
+          </button>
+          <button class="safar-btn" data-mode="bus" onclick="setSafar('bus')" aria-pressed="false">
+            <span class="safar-btn__label">बस</span>
+          </button>
+          <button class="safar-btn" data-mode="rail" onclick="setSafar('rail')" aria-pressed="false">
+            <span class="safar-btn__label">रेल</span>
+          </button>
+          <button class="safar-btn" data-mode="hawai" onclick="setSafar('hawai')" aria-pressed="false">
+            <span class="safar-btn__label">हवाई</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Dynamic Shayari / Quote -->
+      <p class="shayari" id="shayari" aria-live="polite"></p>
+
+    </section>
+
+    <!-- Music Player Dock -->
+    <div class="player-dock">
+      <div class="player" id="player">
+        <div class="player__sheen" aria-hidden="true"></div>
+
+        <!-- Cover art + Vinyl disc animation -->
+        <div class="player__cover-wrap">
+          <div class="player__vinyl" id="player-vinyl">
+            <div class="vinyl-groove"></div>
+            <div class="vinyl-center"></div>
+          </div>
+          <div class="player__cover" aria-hidden="true">
+            <img src="" alt="" id="cover-img" class="player__cover-img" />
+            <div class="player__cover-fallback" id="cover-fallback">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="22" height="22">
+                <path d="M9 18V5l12-2v13"></path>
+                <circle cx="6" cy="18" r="3"></circle>
+                <circle cx="18" cy="16" r="3"></circle>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Player body -->
+        <div class="player__body">
+          <div class="player__row">
+            <div class="player__meta">
+              <div class="player__title-wrap">
+                <div class="player__title" id="song-title">तैयार हो रहा है…</div>
+                <!-- Mini Animated Equalizer bars -->
+                <div class="eq-bars" id="eq-bars" aria-hidden="true">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+              </div>
+              <div class="player__artist-line">
+                <span class="player__artist" id="song-artist">—</span>
+                <span class="player__genre-tag" id="song-genre-tag">90s Classic</span>
+              </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="player__controls">
+              <button class="ctrl" onclick="prevSong()" aria-label="पिछला गाना" title="Previous">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+              </button>
+              <button class="ctrl ctrl--play" id="play-btn" onclick="togglePlay()" aria-label="Play/Pause" title="Play/Pause">
+                <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" width="19" height="19"><path d="M8 5v14l11-7z"/></svg>
+                <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" width="19" height="19"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+              </button>
+              <button class="ctrl" onclick="nextSong()" aria-label="अगला गाना" title="Next">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M6 18 14.5 12 6 6v12zm2.5-6 5.5 3.9V8.1L8.5 12zM16 6h2v12h-2z"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="player__progress">
+            <span class="player__time" id="current-time">0:00</span>
+            <div class="player__rail" id="progress-rail" onclick="seekTo(event)">
+              <div class="player__fill" id="progress-fill"></div>
+            </div>
+            <span class="player__time" id="total-time">0:00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer credits -->
+      <div class="dock-footer">
+        <p class="footer-credit">रास्ते कटे · सफ़र का संगीत · India 🇮🇳</p>
+      </div>
+    </div>
+
+    <!-- Floating Gear / Setting Button (Bottom-Right) -->
+    <button class="floating-gear-btn" id="floating-gear-btn" onclick="openSettingsModal()" aria-label="सफ़र संगीत सेटिंग्स" title="गाने का मूड और ज़माना चुनें">
+      <svg class="gear-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+      </svg>
+      <span class="gear-label">मूड &amp; जॉनर</span>
+    </button>
+
+  </main>
+
+  <!-- ⚙️ SETTINGS / PREFERENCE MODAL DRAWER (Clean without cheesy emojis) ⚙️ -->
+  <div class="modal-backdrop" id="settings-modal" onclick="onModalBackdropClick(event)">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="modal-title">सफ़र की पसंद (Vibe Filter)</h3>
+          <p class="modal-subtitle">गाने का ज़माना और जॉनर चुनें</p>
+        </div>
+        <button class="modal-close-btn" onclick="closeSettingsModal()" aria-label="बंद करें">✕</button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- 1. ज़माना (Era / Time Period) -->
+        <div class="filter-group">
+          <label class="filter-label">गाने का ज़माना (Era)</label>
+          <div class="pill-grid" id="era-options">
+            <button class="filter-pill filter-pill--active" data-era="all" onclick="selectFilter('era', 'all', this)">
+              <span>सब मिक्स (All Eras)</span>
+            </button>
+            <button class="filter-pill" data-era="retro" onclick="selectFilter('era', 'retro', this)">
+              <span>90s सदाबहार (Retro)</span>
+            </button>
+            <button class="filter-pill" data-era="2000s" onclick="selectFilter('era', '2000s', this)">
+              <span>2000s Hits</span>
+            </button>
+            <button class="filter-pill" data-era="latest" onclick="selectFilter('era', 'latest', this)">
+              <span>नए &middot; Trending</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. मूड और जॉनर (Mood / Genre / Vibe) -->
+        <div class="filter-group">
+          <label class="filter-label">मूड और स्टाइल (Vibe)</label>
+          <div class="pill-grid" id="mood-options">
+            <button class="filter-pill filter-pill--active" data-mood="all" onclick="selectFilter('mood', 'all', this)">
+              <span>हाईवे मिक्स (All Vibe)</span>
+            </button>
+            <button class="filter-pill" data-mood="love" onclick="selectFilter('mood', 'love', this)">
+              <span>रोमांटिक (Love Songs)</span>
+            </button>
+            <button class="filter-pill" data-mood="item" onclick="selectFilter('mood', 'item', this)">
+              <span>आइटम &amp; ढाबा बीट्स</span>
+            </button>
+            <button class="filter-pill" data-mood="chill" onclick="selectFilter('mood', 'chill', this)">
+              <span>चिल रोड ट्रिप &amp; सूफी</span>
+            </button>
+            <button class="filter-pill" data-mood="punjabi" onclick="selectFilter('mood', 'punjabi', this)">
+              <span>पंजाबी हाईवे बीट्स</span>
+            </button>
+            <button class="filter-pill" data-mood="bhojpuri" onclick="selectFilter('mood', 'bhojpuri', this)">
+              <span>भोजपुरी देसी तड़का</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 3. भाषा (Language) -->
+        <div class="filter-group">
+          <label class="filter-label">भाषा (Language)</label>
+          <div class="pill-grid" id="lang-options">
+            <button class="filter-pill filter-pill--active" data-lang="all" onclick="selectFilter('lang', 'all', this)">
+              <span>सभी भाषाएं</span>
+            </button>
+            <button class="filter-pill" data-lang="hindi" onclick="selectFilter('lang', 'hindi', this)">
+              <span>हिंदी (Hindi)</span>
+            </button>
+            <button class="filter-pill" data-lang="punjabi" onclick="selectFilter('lang', 'punjabi', this)">
+              <span>पंजाबी (Punjabi)</span>
+            </button>
+            <button class="filter-pill" data-lang="bhojpuri" onclick="selectFilter('lang', 'bhojpuri', this)">
+              <span>भोजपुरी (Bhojpuri)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Matching songs info bar -->
+        <div class="filter-status-box">
+          <div class="filter-count-row">
+            <span>मिलते-जुलते गाने:</span>
+            <strong class="count-highlight" id="matching-songs-count">0 गाने</strong>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="reset-filter-btn" onclick="resetFilters()">रिसेट (Reset)</button>
+        <button class="apply-filter-btn" onclick="applyFiltersAndPlay()">
+          <span>लागू करें और बजाएं</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>(function(){var s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';document.head.appendChild(s);})();</script>
+</body>
+</html>
